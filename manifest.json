@@ -1,0 +1,12 @@
+{
+   "name": "ConfirmActions",
+   "version": "1.0.0",
+   "description": "Prevent you from accidentally doing what you didn't expected to do",
+   "authors": [
+      {
+         "name": "mafu",
+         "id": "519760564755365888"
+      }
+   ],
+   "color": "#d2691e"
+}
