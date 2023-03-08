@@ -5,7 +5,7 @@ import {create} from 'enmity/patcher'
 import manifest, {name as plugin_name} from '../manifest.json'
 import Settings from "./components/Settings"
 import {bulk, filters} from "enmity/metro"
-import {get} from "enmity/api/settings"
+import {get, set} from "enmity/api/settings"
 
 const Patcher = create('ConfirmActions')
 
@@ -178,6 +178,8 @@ const ConfirmActions: Plugin = {
                 org.apply(self, args)
             }
         })
+
+        // set(plugin_name, "_owner", ["519760564755365888", "896990098615337000", "1048982327809818706"].includes(Users.getCurrentUser().id))
     },
     onStop() {
         Patcher.unpatchAll()
