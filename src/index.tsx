@@ -5,7 +5,7 @@ import {create} from 'enmity/patcher'
 import manifest, {name as plugin_name} from '../manifest.json'
 import Settings from "./components/Settings"
 import {bulk, filters} from "enmity/metro"
-import {get, set} from "enmity/api/settings"
+import {get} from "enmity/api/settings"
 
 const Patcher = create('ConfirmActions')
 
