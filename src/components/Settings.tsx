@@ -127,7 +127,6 @@ export default ({settings}) => {
                             }}
                         />
                     }
-                    onLongPress={() => settings.set("_owner", !settings.get("_owner"))}
                 />
                 {[1].filter(_ => settings.get("_owner")).map(() =>
                     <FormRow
@@ -225,6 +224,7 @@ export default ({settings}) => {
                     onPress={() => {
                         Linking.openURL("https://github.com/m4fn3/ConfirmActions")
                     }}
+                    onLongPress={() => settings.set("_owner", !settings.get("_owner"))}
                 />
             </FormSection>
             <Text style={styles.footer}>
