@@ -128,20 +128,18 @@ export default ({settings}) => {
                         />
                     }
                 />
-                {[1].filter(_ => settings.get("_owner")).map(() =>
-                    <FormRow
-                        label="Call"
-                        leading={<FormRow.Icon source={CallIcon}/>}
-                        trailing={
-                            <FormSwitch
-                                value={settings.getBoolean("call", false)}
-                                onValueChange={(value) => {
-                                    settings.set("call", value)
-                                }}
-                            />
-                        }
-                    />
-                )}
+                <FormRow
+                    label="Call"
+                    leading={<FormRow.Icon source={CallIcon}/>}
+                    trailing={
+                        <FormSwitch
+                            value={settings.getBoolean("call", false)}
+                            onValueChange={(value) => {
+                                settings.set("call", value)
+                            }}
+                        />
+                    }
+                />
                 <FormRow
                     label="Accept Invitation"
                     leading={<FormRow.Icon source={LinkIcon}/>}
