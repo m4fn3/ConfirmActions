@@ -1,6 +1,6 @@
 {
    "name": "ConfirmActions",
-   "version": "1.0.2",
+   "version": "1.0.3",
    "description": "Prevent you from accidentally doing what you didn't expected to do",
    "authors": [
       {

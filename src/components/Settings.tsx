@@ -102,6 +102,18 @@ export default ({settings}) => {
                         />
                     }
                 />
+                <FormRow
+                    label="Trust protocol"
+                    leading={<FormRow.Icon source={LinkIcon}/>}
+                    trailing={
+                        <FormSwitch
+                            value={settings.getBoolean("trust_protocol", false)}
+                            onValueChange={(value) => {
+                                settings.set("trust_protocol", value)
+                            }}
+                        />
+                    }
+                />
             </FormSection>
             <FormSection title="ADD CONFIRMATION">
                 <FormRow
