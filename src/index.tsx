@@ -42,7 +42,7 @@ const ConfirmActions: Plugin = {
     onStart() {
         // On Enable Camera
         Patcher.instead(CallStore, "setVideoEnabled", (self, args, org) => {
-            if (args[0] && get(plugin_name, "camera")) {
+            if (args[0] && get(plugin_name, "camera", false)) {
                 Confirm(() => {
                     org.apply(self, args)
                 }, "Enable Camera", "enable camera")
@@ -53,7 +53,7 @@ const ConfirmActions: Plugin = {
 
         // On Start Call (User/Group)
         Patcher.instead(VoiceStore, "handleStartCall", (self, args, org) => {
-            if (get(plugin_name, "call")) {
+            if (get(plugin_name, "call", false)) {
                 Confirm(() => {
                     org.apply(self, args)
                 }, `${args[1] ? 'Video' : 'Voice'} Call`, `start ${args[1] ? 'video' : 'voice'} call`)
@@ -64,7 +64,7 @@ const ConfirmActions: Plugin = {
 
         // On Accept Invite
         Patcher.instead(InviteStore, "acceptInvite", (self, args, org) => {
-            if (["Invite Button Embed", "Markdown Link"].includes(args[0].context?.location) && get(plugin_name, "accept_invite")) {
+            if (["Invite Button Embed", "Markdown Link"].includes(args[0].context?.location) && get(plugin_name, "accept_invite", false)) {
                 InviteStore.resolveInvite(args[0].inviteKey, "Deep Link").then((info) => {
                     Confirm(() => {
                         org.apply(self, args)
@@ -78,7 +78,7 @@ const ConfirmActions: Plugin = {
         // On Action Sheet
         Patcher.instead(LazyActionSheet, "openLazy", (self, args, org) => {
             // On Create Invite
-            if (args[1].startsWith("instant-invite") && get(plugin_name, "create_invite")) {
+            if (args[1].startsWith("instant-invite") && get(plugin_name, "create_invite", false)) {
                 let guild_name = GuildStore.getGuild(args[2].channel.guild_id).name
                 let channel_name = args[2].channel.name
                 Confirm(() => {
@@ -98,7 +98,7 @@ const ConfirmActions: Plugin = {
                 org.apply(self, args)
                 return
             }
-            if (get(plugin_name, "manage_friend")) {
+            if (get(plugin_name, "manage_friend", false)) {
                 let name = Users.getUser(args[0]).username
                 Confirm(() => {
                     org.apply(self, args)
@@ -115,12 +115,12 @@ const ConfirmActions: Plugin = {
                 org.apply(self, args)
                 return
             }
-            if (args[0].type === 2 && get(plugin_name, "manage_friend")) {
+            if (args[0].type === 2 && get(plugin_name, "manage_friend", false)) {
                 let name = Users.getUser(args[0].userId).username
                 Confirm(() => {
                     org.apply(self, args)
                 }, "Block User", `block **${name}**`)
-            } else if (args[0].type === undefined && get(plugin_name, "manage_friend")) {
+            } else if (args[0].type === undefined && get(plugin_name, "manage_friend", false)) {
                 let name = Users.getUser(args[0].userId).username
                 Confirm(() => {
                     org.apply(self, args)
@@ -132,7 +132,7 @@ const ConfirmActions: Plugin = {
 
         // On Accept FriendRequest
         Patcher.instead(RelationshipStore, "acceptFriendRequest", (self, args, org) => {
-            if (get(plugin_name, "friend_request")) {
+            if (get(plugin_name, "friend_request", false)) {
                 let name = Users.getUser(args[0].userId).username
                 Confirm(() => {
                     pendingAccept = true
@@ -145,7 +145,7 @@ const ConfirmActions: Plugin = {
 
         // On Cancel FriendRequest
         Patcher.instead(RelationshipStore, "cancelFriendRequest", (self, args, org) => {
-            if (get(plugin_name, "friend_request")) {
+            if (get(plugin_name, "friend_request", false)) {
                 let name = Users.getUser(args[0]).username
                 Confirm(() => {
                     pendingCancel = true
@@ -159,9 +159,11 @@ const ConfirmActions: Plugin = {
         // On Alert
         Patcher.instead(Dialog, 'show', (self, args, org) => {
             // On Message Delete
-            if (args[0].title === Locale.Messages.DELETE_MESSAGE && get(plugin_name, "delete_message")) {
+            if (args[0].title === Locale.Messages.DELETE_MESSAGE && get(plugin_name, "delete_message", false)) {
                 args[0].onConfirm()
-            } else if ((args[0].title === Locale.Messages.PIN_MESSAGE || args[0].title === Locale.Messages.UNPIN_MESSAGE) && get(plugin_name, "pin_message")) {
+            } else if ((args[0].title === Locale.Messages.PIN_MESSAGE || args[0].title === Locale.Messages.UNPIN_MESSAGE) && get(plugin_name, "pin_message", false)) {
+                args[0].onConfirm()
+            } else if (args[0].secondaryConfirmText === Locale.Messages.MASKED_LINK_TRUST_THIS_PROTOCOL && get(plugin_name, "trust_protocol", false)){
                 args[0].onConfirm()
             } else {
                 org.apply(self, args)
@@ -170,7 +172,7 @@ const ConfirmActions: Plugin = {
 
         // On Mute
         Patcher.instead(CallStore, "toggleSelfMute", (self, args, org) => {
-            if (VoiceSettingsStore.getDeprecatedVoiceSettings().mute && get(plugin_name, "mute")) {
+            if (VoiceSettingsStore.getDeprecatedVoiceSettings().mute && get(plugin_name, "mute", false)) {
                 Confirm(() => {
                     org.apply(self, args)
                 }, "Unmute", "unmute")
@@ -178,8 +180,6 @@ const ConfirmActions: Plugin = {
                 org.apply(self, args)
             }
         })
-
-        // set(plugin_name, "_owner", ["519760564755365888", "896990098615337000", "1048982327809818706"].includes(Users.getCurrentUser().id))
     },
     onStop() {
         Patcher.unpatchAll()
